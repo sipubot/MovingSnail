@@ -89,7 +89,7 @@ var Snail = (function (Snail, undefined) {
     };
     return pos;
   }
-
+  var Carrot = {};
   Carrot.set = {
     "Canvas": [],
     "feedList": [{}, {}, {}]
