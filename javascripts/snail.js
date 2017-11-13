@@ -236,24 +236,22 @@ var Snail = (function (Snail, undefined) {
 
     (function loop() {
       if (1 > xarr.length) return;
-      timer = window.setTimeout(function () {
-        //move canvas
-        obj_S.Canvas.style.top = yarr[0] + "px";
-        obj_S.Canvas.style.left = xarr[0] + "px";
-        obj_S.Position.x = xarr[0];
-        obj_S.Position.y = yarr[0];
-        //rotatecanvas
-        obj_S.Context.clearRect(obj_S.CanvasSize * -1, obj_S.CanvasSize * -1, obj_S.CanvasSize * 2, obj_S.CanvasSize * 2);
-        obj_S.Context.rotate(ratAn[0]);
-        obj_S.Angle = Math.addDegree(obj_S.Angle, Math.degrees(ratAn[0]));
-        //change image
-        obj_S.Context.drawImage(obj_S.Sprite[spIdx], -10, -10, 20, 20);
-        xarr.shift();
-        yarr.shift();
-        ratAn.shift();
-        spIdx++;
-        loop();
-      }, 50);
+      //move canvas
+      obj_S.Canvas.style.top = yarr[0] + "px";
+      obj_S.Canvas.style.left = xarr[0] + "px";
+      obj_S.Position.x = xarr[0];
+      obj_S.Position.y = yarr[0];
+      //rotatecanvas
+      obj_S.Context.clearRect(obj_S.CanvasSize * -1, obj_S.CanvasSize * -1, obj_S.CanvasSize * 2, obj_S.CanvasSize * 2);
+      obj_S.Context.rotate(ratAn[0]);
+      obj_S.Angle = Math.addDegree(obj_S.Angle, Math.degrees(ratAn[0]));
+      //change image
+      obj_S.Context.drawImage(obj_S.Sprite[spIdx], -10, -10, 20, 20);
+      xarr.shift();
+      yarr.shift();
+      ratAn.shift();
+      spIdx++;
+      timer = window.setTimeout(loop, 50);
     })();
   }
 
@@ -262,18 +260,14 @@ var Snail = (function (Snail, undefined) {
     obj_S.onMove = true;
     (function loop() {
       if (1 > list.length) {
-        timer = window.setTimeout(function () {
-          if (feedidx !== undefined) {
-            Carrot.remove(feedidx);
-          }
-          obj_S.onMove = false;
-        }, 650);
+        if (feedidx !== undefined) {
+          Carrot.remove(feedidx);
+        }
+        obj_S.onMove = false;
       } else {
-        timer = window.setTimeout(function () {
-          moveOneStep(list[0].p, list[0].Np);
-          list.shift();
-          loop();
-        }, 450);
+        moveOneStep(list[0].p, list[0].Np);
+        list.shift();
+        timer = window.setTimeout(loop, 450);
       }
     })();
   }
