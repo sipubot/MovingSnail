@@ -164,7 +164,6 @@ var Snail = (function (Snail, undefined) {
 
   Snail.findFeed = function () {
     // if health 0 snail is dying 
-    if (obj_S.Health <= 0) return false;
 
     var timer;
     var minindex = -1;
@@ -173,6 +172,7 @@ var Snail = (function (Snail, undefined) {
 
     (function loop() {
       //if snail is full dont moving feed
+      if (obj_S.Health <= 0) return false;
       if (obj_S.onMove === true || obj_S.Health > 80) {
         timer = window.setTimeout(loop, 1000);
       } else {
