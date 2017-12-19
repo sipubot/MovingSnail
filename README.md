@@ -1,7 +1,6 @@
 # MovingSnail
 
 this is simple html page animal.
-more changing 
+more changing
 
-    ### add hungly stat
-    ### add some comenting. 
+    ### on going something 
