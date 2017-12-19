@@ -98,9 +98,12 @@ var Snail = (function (Snail, undefined) {
   Snail.set = {
     "Height": 0,
     "Width": 0,
+    "Health": 50,
     "Canvas": null,
+    "CanvasCom": null,
     "CanvasSize": 40,
     "Context": null,
+    "ContextCom": null,
     "ratioMovingAngle": [0.25, 0.12, 0.08, 0.05, 0.05, 0.08, 0.12, 0.25],
     "ratioMovingDistance": [0.05, 0.1, 0.2, 0.4, 0.75, 0.85, 0.94, 1],
     "Angle": 0,
@@ -124,6 +127,8 @@ var Snail = (function (Snail, undefined) {
   var obj_C = Carrot.set;
 
   Carrot.remove = function (index) {
+    //add health snail
+    obj_S.Health += 20;
     obj_C.feedList[index].x = false;
     obj_C.feedList[index].y = false;
     obj_C.Canvas[index].style.top = -100 + "px";
@@ -158,13 +163,17 @@ var Snail = (function (Snail, undefined) {
   };
 
   Snail.findFeed = function () {
+    // if health 0 snail is dying 
+    if (obj_S.Health <= 0) return false;
+
     var timer;
     var minindex = -1;
     var temp = 0;
     var waylist = [0, 0, 0];
 
     (function loop() {
-      if (obj_S.onMove === true) {
+      //if snail is full dont moving feed
+      if (obj_S.onMove === true || obj_S.Health > 80) {
         timer = window.setTimeout(loop, 1000);
       } else {
         minindex = -1;
@@ -194,20 +203,63 @@ var Snail = (function (Snail, undefined) {
   Snail.firstMove = function () {
     document.onmousemove = function (e) {
       if (obj_S.firstMove === false) {
+        Snail.Health();
         var fpos = getMousePosion(e);
         var roots = getRoot(obj_S.Position, fpos);
         Shot(roots);
         obj_S.firstMove = true;
       }
     };
-  }
+  };
+
+  Snail.Health = () => {
+    var timer;
+    (function loop() {
+      if (0 === obj_S.Health) {
+        obj_S.CanvasCom.style.top = obj_S.Position.y + "px";
+        obj_S.CanvasCom.style.left = obj_S.Position.x + "px";
+        obj_S.ContextCom.clearRect(0, 0, 80, 20);
+        obj_S.ContextCom.font = '12px Comic Sans';
+        obj_S.ContextCom.fillText('Bye......', 0, 10);
+        timer = null;
+        return false;
+      }
+      obj_S.CanvasCom.style.top = obj_S.Position.y + "px";
+      obj_S.CanvasCom.style.left = obj_S.Position.x + "px";
+      obj_S.ContextCom.clearRect(0, 0, 80, 20);
+      if (30 > obj_S.Health) {
+        obj_S.CanvasCom.style.top = obj_S.Position.y + "px";
+        obj_S.CanvasCom.style.left = obj_S.Position.x + "px";
+        obj_S.ContextCom.clearRect(0, 0, 80, 20);
+        obj_S.ContextCom.font = '12px Comic Sans';
+        obj_S.ContextCom.fillText('I\'m hungry ;;', 0, 10);
+      }
+      if (80 < obj_S.Health) {
+        obj_S.CanvasCom.style.top = obj_S.Position.y + "px";
+        obj_S.CanvasCom.style.left = obj_S.Position.x + "px";
+        obj_S.ContextCom.clearRect(0, 0, 80, 20);
+        obj_S.ContextCom.font = '12px Comic Sans';
+        obj_S.ContextCom.fillText('I\'m full...', 0, 10);
+      }
+      if (obj_S.onMove === true) {
+        obj_S.Health -= 4;
+      } else {
+        obj_S.Health -= 2;
+      }
+      obj_S.Health = obj_S.Health < 0 ? 0 : obj_S.Health;
+      //on test
+      timer = window.setTimeout(loop, 2000);
+    })();
+  };
 
   Snail.init = function () {
     var imglist = Array.apply(null, Array(4)).map((a, i) => obj_S.Images["Snail" + i]);
     obj_S.Height = 1024;
     obj_S.Width = 766;
     obj_S.Canvas = document.getElementById("snail");
+    obj_S.CanvasCom = document.getElementById("snailComment");
     obj_S.Context = obj_S.Canvas.getContext("2d");
+    obj_S.ContextCom = obj_S.CanvasCom.getContext("2d");
     obj_S.Context.translate(obj_S.CanvasSize * 0.5, obj_S.CanvasSize * 0.5);
     obj_S.Sprite = imglist.concat((imglist.slice(0)).reverse());
     for (var i = 0; i < 3; i++) {
