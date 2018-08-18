@@ -204,7 +204,12 @@ var Snail = (function (Snail, undefined) {
     document.onmousemove = function (e) {
       if (obj_S.firstMove === false) {
         Snail.Health();
-        var fpos = getMousePosion(e);
+        //초기 움직임을 마우스 포지션으로 잡던것을 변경 가까이 움직인다.
+        //var fpos = getMousePosion(e);
+        var fpos = {
+          "x": 100,
+          "y": 50
+        };
         var roots = getRoot(obj_S.Position, fpos);
         Shot(roots);
         obj_S.firstMove = true;
